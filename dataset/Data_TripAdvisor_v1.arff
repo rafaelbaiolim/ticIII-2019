@@ -7,7 +7,7 @@
 @attribute HOTEL_CITY {Memphis,SanAntonio,Albuquerque,ELPaso,Cleveland,Austin,Houston,Jacksonville,Indianapolis,Dallas,Phoenix,Seattle,Louisville,Tucson,LosAngeles,Tulsa,OklahomaCity,Boston,Arlington,Fresno,Nashville,VirginiaBeach,Charlotte,Columbus,FortWorth,SanDiego,Denver,Miami,Portland,LongBeach,SanJose,Sacramento,Raleigh,Atlanta,Milwaukee,Mesa,Minneapolis,Baltimore,Chicago,Wichita,Omaha,LasVegas,NewYork,SanFrancisco,Oakland,Detroit,Philadelphia,Kansas}
 @attribute HOTEL_STATE {TN,TX,NM,OH,FL,IN,AZ,WA,KY,CA,OK,MA,VA,NC,CO,MI,OR,GA,WI,MN,MD,IL,KS,NE,NV,NY,PA}
 @attribute HOTEL_TIMEZONE {Central,Mountain,Eastern,Pacific}
-@attribute 'Trip Type' numeric
+@attribute Trip numeric
 @attribute Rating numeric
 
 @data

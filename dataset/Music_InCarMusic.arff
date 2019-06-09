@@ -1,12 +1,12 @@
 @relation musicInCars
 
-@attribute UserID numeric
-@attribute ItemID numeric
-@attribute ' Rating' numeric
+@attribute user numeric
+@attribute item numeric
+@attribute rating numeric
 @attribute DrivingStyle {NA,'relaxed driving','sport driving'}
 @attribute landscape {NA,urban,mountains,'country side','coast line'}
 @attribute mood {NA,sad,lazy,active,happy}
-@attribute 'naturalphenomena ' {NA,night,morning,'day time',afternoon}
+@attribute naturalphenomena {NA,night,morning,'day time',afternoon}
 @attribute RoadType {NA,city,serpentine,highway}
 @attribute sleepiness {NA,sleepy,awake}
 @attribute trafficConditions {NA,'traffic jam','lots of cars','free road'}
