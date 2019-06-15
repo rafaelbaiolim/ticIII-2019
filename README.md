@@ -3,9 +3,20 @@ Trabalho da Pós Graduação em CC UEM - TICIII - LibRec
 
 Execução 
 =============
-cmd1: 
-```$ cd librec/bin && ./librec rec -exec -D rec.recommender.class=globalaverage -conf ../../conf/librec-default.properties -libjars ../lib/log4j-1.2.17.jar```
+1. ```$ cd librec/bin```
+
+2. ```./librec rec -exec -conf ../../conf/$nomeConf.properties -libjars ../lib/log4j-1.2.17.jar```
+
+obs.: `$nomeConf.properties` são os arquivos disponíveis em ./conf/
 
 Output no no arquivo 
 
-```$ @cmd1 2> "out_result.txt" ```
+```$ @cmd2 2> "out_result.txt" ```
+
+Lista de RecommenderSimilarity
+==============================
+https://www.librec.net/dokuwiki/doku.php?id=Recommender
+
+Lista de Configurações e Algoritmos
+====================================
+https://www.librec.net/dokuwiki/doku.php?id=AlgorithmList#recommender_algorithm_list
