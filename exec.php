@@ -1,8 +1,9 @@
 <?php
 $goToDir = "cd ./librec/bin/";
+$goToCSVFolder = "cd ./results/csv/";
 $models = [
-    'kfold',
-    'ratio'
+    'ratio',
+    'kfold'
 ];
 
 $confAvailabels = [
@@ -17,6 +18,9 @@ $datasets = [
     'Music_InCarMusic',
     'Travel_TripAdvisor_v2'
 ];
+$header = "Algoritmo,MPE,MSE,RMSE,MAE";
+
+exec("$goToCSVFolder && rm $(fd .csv)");
 
 foreach ($models as $model) {
     foreach ($datasets as $dataset) {
@@ -24,34 +28,30 @@ foreach ($models as $model) {
         foreach ($confAvailabels as $confProp) {
             $runLibRec = "librec rec -exec -conf {$confFolder}/{$confProp}";
             exec("$goToDir && $runLibRec  2>&1 ", $output);
-            $algorith = explode(".",$confProp);
-            switch ($model) {
-                case "ratio":
-                    $fp = fopen(getcwd() ."/results/ratio.csv", "a+");
-                    $metrics = getMetricsByRatio($output,[
-                        "Métrica" => "Ratio",
-                        "Algoritmo" => $algorith[0]
-                    ]);
-                    fputcsv($fp,$metrics);
-                    fclose($fp);
-                    break;
-                case "kfold":
-                    $fp = fopen(getcwd() ."/results/kfold.csv", "a+");
-                    $metrics = getMetricsByKFold($output,[
-                        "Métrica" => "KCV",
-                        "Algoritmo" => $algorith[0]
-                    ]);
-                    fputcsv($fp,$metrics);
-                    fclose($fp);
-                    break;
+            $algorith = explode(".", $confProp);
+            if ($model == "ratio") {
+                $file = getcwd() . "/results/csv/ratio_{$dataset}.csv";
+                $fp = fopen($file, "a+");
+                $result = getMetricsByRatio($output, $algorith[0]);
+                fputcsv($fp, $result);
+                fclose($fp);
+                file_prepend($header,$file);
+            } else {
+                $file = getcwd() . "/results/csv/kfold_{$dataset}.csv";
+                $fp = fopen($file, "a+");
+                $result = getMetricsByKFold($output, $algorith[0]);
+                fputcsv($fp, $result);
+                fclose($fp);
+                file_prepend($header,$file);
             }
-                        
         }
     }
 }
 
-function getMetricsByKFold($output, $metrics = array())
+
+function getMetricsByKFold($output, $algotithName)
 {
+    $metrics = array($algotithName);
     $avgFounded = false;
     array_filter($output, function ($lineOutput) use (&$avgFounded, &$metrics) {
         if (preg_match("@Average@", $lineOutput) && !$avgFounded) {
@@ -67,8 +67,9 @@ function getMetricsByKFold($output, $metrics = array())
 /**
  * Array Map de Ratio
  */
-function getMetricsByRatio($output, $metrics = array("Métrica" => "Ratio"))
+function getMetricsByRatio($output, $algotithName)
 {
+    $metrics = array($algotithName);
     array_map(function ($lineOutput) use (&$metrics) {
         getCurrentMetricFromLine($lineOutput, $metrics);
     }, $output);
@@ -83,4 +84,9 @@ function getCurrentMetricFromLine($lineOutput, &$metrics)
         preg_match("@$metricName.*is.*(\d+\.\d+)@ius", $lineOutput, $metricResult);
         $metrics[$metricName] = $metricResult[1];
     }
+}
+
+function file_prepend ($string, $filename) {
+    $fileContent = file_get_contents ($filename);
+    file_put_contents ($filename, $string . "\n" . $fileContent);
 }
