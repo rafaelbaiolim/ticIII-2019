@@ -24,7 +24,7 @@ https://www.librec.net/dokuwiki/doku.php?id=AlgorithmList#recommender_algorithm_
 Artigo
 ================================
 - [ ] Resumo
-- [ x ] Introdução
+- [x] Introdução
 - [ ] Ferramenta 
 1. ✅ Qual ferramenta usou 
 2. O que tem de especial
