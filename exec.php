@@ -100,7 +100,7 @@ function getCurrentMetricFromLine($lineOutput, &$metrics)
     if (!empty($currentMetric)) {
         $metricName = trim($match[0]);
         preg_match("@$metricName.*is.*(\d+\.\d+)@ius", $lineOutput, $metricResult);
-        $metrics[$metricName] = $metricResult[1];
+        $metrics[$metricName] = number_format($metricResult[1], 6);
     }
 }
 
