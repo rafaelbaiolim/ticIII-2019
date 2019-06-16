@@ -9,7 +9,7 @@ Execução
 
 obs.: `$nomeConf.properties` são os arquivos disponíveis em ./conf/
 
-Output no no arquivo 
+Output no arquivo 
 
 ```$ @cmd2 2> "out_result.txt" ```
 
