@@ -20,12 +20,19 @@ $datasets = [
 ];
 $header = "Algoritmo,MPE,MSE,RMSE,MAE";
 
-exec("$goToCSVFolder && rm $(fd .csv)");
+//deleta os resultados de métricas antigos, se necessário
+//@obs.:não funciona com arquivos com espaço 
+exec("$goToCSVFolder && fd .csv", $files);
+if (!empty($files)) {
+    foreach ($files as $csvFile) {
+        exec("$goToCSVFolder && rm {$csvFile}");
+    }
+}
 
 foreach ($models as $model) {
     foreach ($datasets as $dataset) {
         $confFolder = getcwd() . "/conf/{$model}/{$dataset}";
-        foreach ($confAvailabels as $confProp) {
+        foreach ($confAvailabels as $key => $confProp) {
             $runLibRec = "librec rec -exec -conf {$confFolder}/{$confProp}";
             exec("$goToDir && $runLibRec  2>&1 ", $output);
             $algorith = explode(".", $confProp);
@@ -33,22 +40,30 @@ foreach ($models as $model) {
                 $file = getcwd() . "/results/csv/ratio_{$dataset}.csv";
                 $fp = fopen($file, "a+");
                 $result = getMetricsByRatio($output, $algorith[0]);
+                var_dump($result);
                 fputcsv($fp, $result);
                 fclose($fp);
-                file_prepend($header,$file);
+                if ($key == count($confAvailabels) - 1) {
+                    file_prepend($header, $file);
+                }
             } else {
                 $file = getcwd() . "/results/csv/kfold_{$dataset}.csv";
                 $fp = fopen($file, "a+");
                 $result = getMetricsByKFold($output, $algorith[0]);
+                var_dump($result);
                 fputcsv($fp, $result);
                 fclose($fp);
-                file_prepend($header,$file);
+                if ($key == count($confAvailabels) - 1) {
+                    file_prepend($header, $file);
+                }
             }
         }
     }
 }
 
-
+/**
+ * Model Kfold
+ */
 function getMetricsByKFold($output, $algotithName)
 {
     $metrics = array($algotithName);
@@ -65,7 +80,7 @@ function getMetricsByKFold($output, $algotithName)
 }
 
 /**
- * Array Map de Ratio
+ * Model Ratio
  */
 function getMetricsByRatio($output, $algotithName)
 {
@@ -76,6 +91,9 @@ function getMetricsByRatio($output, $algotithName)
     return $metrics;
 }
 
+/**
+ * Filtro de métricas
+ */
 function getCurrentMetricFromLine($lineOutput, &$metrics)
 {
     $currentMetric = preg_match("@MSE|RMSE|MPE|MAE@", $lineOutput, $match);
@@ -86,7 +104,11 @@ function getCurrentMetricFromLine($lineOutput, &$metrics)
     }
 }
 
-function file_prepend ($string, $filename) {
-    $fileContent = file_get_contents ($filename);
-    file_put_contents ($filename, $string . "\n" . $fileContent);
+/**
+ * Append header do arquivo
+ */
+function file_prepend($string, $filename)
+{
+    $fileContent = file_get_contents($filename);
+    file_put_contents($filename, $string . "\n" . $fileContent);
 }
